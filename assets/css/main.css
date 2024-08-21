@@ -1,0 +1,159 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, .editor .form button, .header__title, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+input, button {
+  font: inherit;
+}
+
+.header > *, .content-margin {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1140px;
+  padding-left: 36px;
+  padding-right: 36px;
+}
+
+main section {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.editor .form > * {
+  display: flex;
+  align-items: center;
+}
+.editor .form > * input {
+  flex: 1 0;
+}
+
+.editor .form button, .editor .form input {
+  border: none;
+  outline: none;
+  background: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.8rem;
+  font-weight: 400;
+  font-family: "DM Sans", sans-serif;
+}
+
+*, ::before, ::after {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, .editor .form button, .header__title {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 5.5rem;
+}
+
+h2 {
+  font-size: 4.2rem;
+}
+
+h3 {
+  font-size: 3.4rem;
+}
+
+h4, .editor .form button, .header__title {
+  font-size: 2.2rem;
+}
+
+.header {
+  background: #8f3500;
+  position: sticky;
+  top: 0;
+  left: 0;
+}
+.header > * {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.header__title {
+  color: #fff;
+}
+
+.editor__title {
+  margin-bottom: 20px;
+}
+.editor .form {
+  display: grid;
+  grid-gap: 24px;
+}
+.editor .form > * {
+  gap: 20px;
+}
+.editor .form input {
+  border-bottom: 2px solid;
+  padding-bottom: 3px;
+}
+.editor .form button {
+  cursor: pointer;
+  padding: 6px 14px;
+  border: 2px solid #000;
+  transition: 0.3s;
+}
+.editor .form button:hover {
+  background: #000;
+  color: #fff;
+}
+
+/*# sourceMappingURL=main.css.map */

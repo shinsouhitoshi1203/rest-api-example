@@ -1,0 +1,16 @@
+{
+  "name": "f8_javascript3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "runjson": "json-server --watch db.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.17.4"
+  },
+  "devDependencies": {},
+  "description": ""
+}

@@ -1,0 +1,16 @@
+%wrap-content {margin-left: auto;margin-right: auto; width: 100%; max-width: 1140px; padding-left: 36px; padding-right: 36px;}
+%section-space {margin-top: 40px;margin-bottom: 40px;}
+
+
+%form-with-text {
+    display: flex; align-items: center; 
+    input {
+        flex: 1 0;
+    }
+}
+
+%input-format {
+    border: none; outline: none;
+    background: inherit;
+    padding: 0; margin: 0;
+}
