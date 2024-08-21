@@ -14,3 +14,6 @@
     background: inherit;
     padding: 0; margin: 0;
 }
+
+%inpos {position: absolute; top: 0;left: 0;}
+%quick-center {display: flex; align-items: center; justify-content: center;}
