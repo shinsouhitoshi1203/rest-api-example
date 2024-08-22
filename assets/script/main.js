@@ -29,53 +29,6 @@ function changeMultiText(data=[]) {
         })
     }
 }
-function jsonLoadHandler(response) {
-    if (response.length==0) {
-        loadData("Nothing to show here")
-        return 0;
-    }
-    var htmls = response.map((p,i)=>{
-        var post_id = p.id;
-        var post_name = p.postName;
-        var post_desc = p.postDesc;
-        return `
-        <div class="post__item" data-target="${post_id}">
-        <div class="post__icon">
-        <div class="post__id">${++i}</div>
-        <div class="post__option">
-                                <a href="javascript:;" class="cta" onclick="deletePost(this)">Delete</a>
-                                <a href="javascript:;" class="cta" onclick="editPost(this)">Modify</a>
-                            </div>
-                            </div>
-                        <div class="post__text">
-                            <h3 class="post__title">${post_name}</h3>
-                            <p class="post__desc">${post_desc}</p>
-                        </div>
-                        </div>
-                        `;
-                        
-                    }) 
-                    loadData(htmls.join(""));
-}
-function handlePostRequest(path="",data={}, callback=()=>{},localhost=true) {
-    // will be replaced in real hosting server
-    var defaultDomain = "http://localhost:3000/posts/";
-    var realDomain = "";
-    var url = (localhost)?`${defaultDomain}${path}`:`${realDomain}${path}`; 
-    try {
-        fetch(url,data)
-        .then(
-                function (httpResponse) {
-                    if (!httpResponse.ok) throw new Error("There was an error while loading pages")
-                        return httpResponse.json();
-                }
-            )
-            .then(callback)
-            
-    } catch (e) {
-        loadData(e.message)
-    }
-}
 function submitPost(){
     function realPost(post_name, post_desc) {
         var new_post = {
@@ -166,9 +119,14 @@ function modifyPost(id_target){
         }
         handlePostRequest(id_target,data, function () {});
     }
-    function resetText() {
+    function resetText(id_target, post_name, post_desc) {
+        document.querySelector("#postName").value = "";
+        document.querySelector("#postDesc").value = "";
         changeMultiText(retrieveData("REST API Submission", "Submit"));
         document.querySelector(`.form__btn`).setAttribute("data-target", "");
+        var t = document.querySelector(`.post__item[data-target="${id_target}"] .post__title`), d = document.querySelector(`.post__item[data-target="${id_target}"] .post__desc`);
+        t.innerText = post_name;
+        d.innerText = post_desc;
     }
     if (id_target!="") {
         var post_name = document.querySelector("#postName").value;
@@ -176,11 +134,63 @@ function modifyPost(id_target){
 
         if (post_name&&post_desc) {
             realPost(post_name, post_desc);
-            resetText();
+            resetText(id_target, post_name, post_desc);
         } else {
             loadData("The data cannot be empty")
             return 0;
         }
+    }
+}
+function jsonLoadHandler(response) {
+    if (response.length==0) {
+        loadData("Nothing to show here")
+        return 0;
+    }
+    var htmls = response.map((p,i)=>{
+        var post_id = p.id;
+        var post_name = p.postName;
+        var post_desc = p.postDesc;
+        return `
+        <div class="post__item" data-target="${post_id}">
+        <div class="post__icon">
+        <div class="post__id">${++i}</div>
+        <div class="post__option">
+                                <a href="javascript:;" class="cta" onclick="deletePost(this)">Delete</a>
+                                <a href="javascript:;" class="cta" onclick="editPost(this)">Modify</a>
+                            </div>
+                            </div>
+                        <div class="post__text">
+                            <h3 class="post__title">${post_name}</h3>
+                            <p class="post__desc">${post_desc}</p>
+                        </div>
+                        </div>
+                        `;
+                        
+                    }) 
+                    loadData(htmls.join(""));
+}
+function handlePostRequest(path="",data={}, callback=()=>{},localhost=false) {
+    // will be replaced in real hosting server
+    var defaultDomain = "http://localhost:3000/posts/";
+    var realDomain = "https://rest-api-eta-one.vercel.app/api/posts/";
+    var url = (localhost)?`${defaultDomain}${path}`:`${realDomain}${path}`; 
+    try {
+        fetch(url,data)
+            .then(
+                function (httpResponse) {
+                    if (!httpResponse.ok) throw new Error("There was an error while loading pages")
+                        return httpResponse.json();
+                    }
+                )
+                .then(callback)
+            .catch (
+                function () {
+                    loadData("Connection rejected");
+                }
+            )
+            
+    } catch (e) {
+        loadData(e.message)
     }
 }
 
