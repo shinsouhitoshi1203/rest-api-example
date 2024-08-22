@@ -30,6 +30,13 @@ function changeMultiText(data=[]) {
     }
 }
 function submitPost(){
+    function addDOMObject(post_id, post_name, post_desc) {
+        resetFormText();
+        var target = document.querySelector(".post__list");
+        var i = target.querySelectorAll(".post__item").length + 1;
+        var html = `<div class="post__item" data-target="${post_id}"><div class="post__icon"><div class="post__id">${i}</div><div class="post__option"><a href="javascript:;" class="cta" onclick="deletePost(this)">Delete</a><a href="javascript:;" class="cta" onclick="triggerEditForm(this)">Modify</a></div></div><div class="post__text"><h3 class="post__title">${post_name}</h3><p class="post__desc">${post_desc}</p></div></div>`;
+        target.innerHTML+=html;
+    }
     function realPost(post_name, post_desc) {
         var new_post = {
             postName: post_name,
@@ -40,11 +47,14 @@ function submitPost(){
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(new_post),
         }
-        handlePostRequest("",data, function () {});
+        handlePostRequest("",data, function (jsonData) {
+            addDOMObject(jsonData.id,post_name,post_desc);
+        });
     }
     
     var post_name = document.querySelector("#postName").value;
     var post_desc = document.querySelector("#postDesc").value;
+
     if (post_name&&post_desc) {
         realPost(post_name, post_desc);
     } else {
@@ -73,19 +83,19 @@ function loadData(txt) {
     var target = document.querySelector(".post__list");
     target.innerHTML = txt;
 }
-function editPost(e) {
-    function retrieveData(v1,v2){
-        return [
-            {
-                target: ".form__btn",
-                text: v2,
-            },
-            {
-                target: ".editor__title",
-                text: v1,
-            }
-        ]
-    }
+function retrieveData(v1,v2){
+    return [
+        {
+            target: ".form__btn",
+            text: v2,
+        },
+        {
+            target: ".editor__title",
+            text: v1,
+        }
+    ]
+}
+function triggerEditForm(e) {
     var id_target = getPostID(e);
     list = retrieveData(`Modify post #${id_target}`, "Modify")
     changeMultiText(list);
@@ -94,19 +104,13 @@ function editPost(e) {
     document.querySelector(`#postDesc`).value = d.innerText;
     document.querySelector(`.form__btn`).setAttribute("data-target", id_target);
 }
+function resetFormText() {
+    document.querySelector("#postName").value = "";
+    document.querySelector("#postDesc").value = "";
+    changeMultiText(retrieveData("REST API Submission", "Submit"));
+    document.querySelector(`.form__btn`).setAttribute("data-target", "");
+}
 function modifyPost(id_target){
-    function retrieveData(v1,v2){
-        return [
-            {
-                target: ".form__btn",
-                text: v2,
-            },
-            {
-                target: ".editor__title",
-                text: v1,
-            }
-        ]
-    }
     function realPost(post_name, post_desc) {
         var target_post = {
             postName: post_name,
@@ -119,11 +123,8 @@ function modifyPost(id_target){
         }
         handlePostRequest(id_target,data, function () {});
     }
-    function resetText(id_target, post_name, post_desc) {
-        document.querySelector("#postName").value = "";
-        document.querySelector("#postDesc").value = "";
-        changeMultiText(retrieveData("REST API Submission", "Submit"));
-        document.querySelector(`.form__btn`).setAttribute("data-target", "");
+    function modifyDOMObject(id_target, post_name, post_desc) {
+        resetFormText();
         var t = document.querySelector(`.post__item[data-target="${id_target}"] .post__title`), d = document.querySelector(`.post__item[data-target="${id_target}"] .post__desc`);
         t.innerText = post_name;
         d.innerText = post_desc;
@@ -134,7 +135,7 @@ function modifyPost(id_target){
 
         if (post_name&&post_desc) {
             realPost(post_name, post_desc);
-            resetText(id_target, post_name, post_desc);
+            modifyDOMObject(id_target, post_name, post_desc);
         } else {
             loadData("The data cannot be empty")
             return 0;
@@ -156,7 +157,7 @@ function jsonLoadHandler(response) {
         <div class="post__id">${++i}</div>
         <div class="post__option">
                                 <a href="javascript:;" class="cta" onclick="deletePost(this)">Delete</a>
-                                <a href="javascript:;" class="cta" onclick="editPost(this)">Modify</a>
+                                <a href="javascript:;" class="cta" onclick="triggerEditForm(this)">Modify</a>
                             </div>
                             </div>
                         <div class="post__text">
@@ -179,13 +180,13 @@ function handlePostRequest(path="",data={}, callback=()=>{},localhost=false) {
             .then(
                 function (httpResponse) {
                     if (!httpResponse.ok) throw new Error("There was an error while loading pages")
-                        return httpResponse.json();
-                    }
-                )
-                .then(callback)
+                    return httpResponse.json();
+                }
+            )
+            .then(callback)
             .catch (
-                function () {
-                    loadData("Connection rejected");
+                function (e) {
+                    loadData(`Connection rejected. Reason: ${e}`);
                 }
             )
             
@@ -193,7 +194,6 @@ function handlePostRequest(path="",data={}, callback=()=>{},localhost=false) {
         loadData(e.message)
     }
 }
-
 handlePostRequest("",{},jsonLoadHandler);
 document.querySelector(".form__btn").addEventListener("click",(e)=>{
     if (e.target.innerText=="Submit") {
