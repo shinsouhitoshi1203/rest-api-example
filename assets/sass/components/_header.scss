@@ -2,6 +2,7 @@
     background: #8f3500;
     position: sticky;
     top: 0;left: 0;
+    z-index: 1111;
     > * {
         @extend %wrap-content;
         padding-top: 12px; padding-bottom: 12px;
